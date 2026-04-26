@@ -930,7 +930,11 @@ async function encodeAiff(audio, onProgress) {
   }
 
   if (onProgress) onProgress(1);
-  return new Blob([buffer], { type: 'audio/aiff' });
+  // Use a generic MIME type rather than 'audio/aiff'. Some browsers (Safari
+  // especially) override the .download filename when the MIME type implies
+  // a different conventional extension — that's why .aif was getting
+  // rewritten to .aiff. octet-stream tells the browser to leave it alone.
+  return new Blob([buffer], { type: 'application/octet-stream' });
 }
 
 function writeAscii(view, offset, str) {
